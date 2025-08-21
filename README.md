@@ -53,18 +53,37 @@ sequenceDiagram
 
 ## API Details
 
-### Square APIs Used
+### Phase 1 (current implementation)
+**Goal:** Keep Square as the cashier-facing frontend; submit RFS In-Store orders to QBP; maintain daily supplier stock snapshot and do a just-in-time (JIT) availability check before submit.
+
+**Square services used now:**
+- **Webhooks** – subscribe to `order.updated` (paid) and POST to middleware
+- **Orders API** – fetch order details; write notes/fulfillment updates
+- **Customers API** – fetch shipping/contact details for RFS
+
+**QBP interfaces used now:**
+- **POS API (read-only)** – GET stock & cost for snapshot and JIT checks
+- **EFTP (FTP/SFTP)** – submit `.poi` files; read `.por` responses
+
+---
+
+### Phase 2 (future, not included yet)
+When we’re ready to show **live supplier counts inside Square**, we’ll add:
+- **Inventory API (Square)** – push supplier on-hand to a virtual **“QBP Warehouse”** location
+- **(Optional) Catalog API (Square)** – automate item mapping & retail price updates from QBP cost
+
+> Phase 2 does **not** change the cashier flow; it only improves visibility (live counts in POS) and back-office automation.
+
+### Square APIs Used (Phase 1)
 - **Orders API** – Fetch order details, update fulfillment/notes.
 - **Customers API** – Pull customer shipping info.
 - **Webhooks** – Subscribe to `order.updated` events; Square will POST JSON payloads to middleware.
-- *(Phase 2)* **Inventory API** – Push supplier stock counts into a virtual QBP warehouse inside Square.
-- *(Phase 2)* **Catalog API** – Manage item mapping, pricing updates.
 
-### QBP Interfaces Used
+### QBP Interfaces Used (Phase 1)
 - **POS API (outbound)** – GET stock, cost, and catalog data.
 - **EFTP (FTP/SFTP)** – Inbound `.poi` files to submit orders; `.por` response files for confirmations/errors.
 
-### Middleware Responsibilities
+### Middleware Responsibilities (Phase 1)
 - Listen for Square webhooks (FastAPI endpoint).
 - Map Square variation → QBP SKU.
 - Just-in-time check: GET QBP stock before submit.
