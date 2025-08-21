@@ -65,15 +65,13 @@ sequenceDiagram
 - **POS API (read-only)** – GET stock & cost for snapshot and JIT checks
 - **EFTP (FTP/SFTP)** – submit `.poi` files; read `.por` responses
 
----
-
 ### Phase 2 (future, not included yet)
 When we’re ready to show **live supplier counts inside Square**, we’ll add:
 - **Inventory API (Square)** – push supplier on-hand to a virtual **“QBP Warehouse”** location
 - **(Optional) Catalog API (Square)** – automate item mapping & retail price updates from QBP cost
 
 > Phase 2 does **not** change the cashier flow; it only improves visibility (live counts in POS) and back-office automation.
-
+---
 ### Square APIs Used (Phase 1)
 - **Orders API** – Fetch order details, update fulfillment/notes.
 - **Customers API** – Pull customer shipping info.
